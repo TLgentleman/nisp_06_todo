@@ -1,0 +1,396 @@
+/* ==========================================================================
+   MASTER TODO - FUTURISTIC CSS ARCHITECTURE (2026 EDITION)
+   ========================================================================== */
+
+/* Definicja natywnych zmiennych CSS i schematu kolorów */
+:root {
+    /* Paleta: Dark Space & Neon Accents */
+    --bg-base: #05050a;
+    --bg-surface: rgba(20, 20, 30, 0.6);
+    --bg-surface-hover: rgba(35, 35, 55, 0.8);
+    
+    --accent-primary: #00f0ff; /* Neon Cyan */
+    --accent-secondary: #7000ff; /* Deep Neon Purple */
+    --text-main: #f0f4f8;
+    --text-muted: #8b92a5;
+    --danger: #ff2a5f;
+    --success: #00ffaa;
+
+    /* Efekty szkła */
+    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --glass-blur: blur(16px);
+
+    /* Zmienne pod przyszły JS (śledzenie myszy) */
+    --x: 50%;
+    --y: 50%;
+}
+
+/* Reset i podstawy optymalizacji */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    overflow: hidden; /* Aplikacja działa jak native app, bez scrolla na body */
+    
+    /* Futurystyczne tło z dynamicznym gradientem */
+    background-image: 
+        radial-gradient(circle at 15% 50%, rgba(112, 0, 255, 0.15), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.1), transparent 25%);
+    background-size: cover;
+    background-position: center;
+}
+
+/* ==========================================================================
+   LAYOUT GŁÓWNY (CSS Grid)
+   ========================================================================== */
+
+/* Top Header */
+.top-header {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    background: var(--bg-surface);
+    backdrop-filter: var(--glass-blur);
+    border-bottom: var(--glass-border);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    position: relative;
+}
+
+.top-header h1 {
+    font-size: 1.5rem;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+}
+
+/* Flexbox nawigacji */
+.view-controls, .time-navigation, .user-settings {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Główny kontener - Grid na resztę ekranu */
+.app-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    height: calc(100vh - 70px);
+}
+
+/* Pasek boczny */
+.sidebar-left {
+    background: rgba(10, 10, 15, 0.5);
+    border-right: var(--glass-border);
+    backdrop-filter: var(--glass-blur);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    overflow-y: auto;
+}
+
+/* ==========================================================================
+   PRZYCISKI I INTERAKCJE (Magia Hoverów i Nowoczesnego CSS)
+   ========================================================================== */
+
+button {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+/* MAGIA: Nowoczesny przycisk podświetlany gradientem śledzącym mysz */
+.btn-primary, .quick-actions button {
+    width: 100%;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    /* Ustawienie kontekstu dla pseudo-elementu */
+    isolation: isolate; 
+}
+
+/* Ten pseudo-element to nasz gradient "światła". 
+   Na razie pływa, a z JS podepniemy go do myszy */
+.btn-primary::before, .quick-actions button::before {
+    content: '';
+    position: absolute;
+    inset: -2px; /* Wylewa się nieco poza guzik */
+    z-index: -1;
+    background: radial-gradient(
+        circle 80px at var(--x) var(--y),
+        var(--accent-primary) 0%,
+        transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn-primary:hover::before, .quick-actions button:hover::before {
+    opacity: 0.4;
+    animation: pulse-glow 2s infinite alternate; /* Fallback zanim dodamy JS */
+}
+
+.btn-primary:hover, .quick-actions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+    border-color: rgba(0, 240, 255, 0.5);
+}
+
+/* Przyciski zakładek i nawigacji */
+.main-tabs ul, .pre-placed-routines ul, .log-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.main-tabs a, .pre-placed-routines button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+/* Wykorzystanie nowoczesnego :is() dla uproszczenia kodu */
+:is(.main-tabs a, .pre-placed-routines button):hover {
+    background: var(--bg-surface-hover);
+    color: var(--text-main);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translateX(5px); /* Subtelne przesunięcie w prawo */
+}
+
+.main-tabs a[aria-current="page"] {
+    background: color-mix(in srgb, var(--accent-secondary) 20%, transparent);
+    color: var(--text-main);
+    border-left: 3px solid var(--accent-secondary);
+}
+
+/* ==========================================================================
+   KALENDARZ (CSS Grid & Neomorfizm)
+   ========================================================================== */
+
+.calendar-core {
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1rem;
+    /* Automatyczne skalowanie wierszy na podstawie zawartości */
+    grid-auto-rows: minmax(120px, auto); 
+}
+
+.weekday-header {
+    text-align: center;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent-primary);
+    padding-bottom: 1rem;
+    font-weight: 600;
+}
+
+.calendar-day {
+    background: var(--bg-surface);
+    border: var(--glass-border);
+    border-radius: 12px;
+    padding: 10px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.calendar-day:hover {
+    background: var(--bg-surface-hover);
+    transform: scale(1.02);
+    box-shadow: var(--glass-shadow);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.calendar-day time {
+    display: inline-block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--text-muted);
+}
+
+/* Wyróżnienie obecnego miesiąca i dzisiejszego dnia */
+.calendar-day.current-month time {
+    color: var(--text-main);
+}
+
+.calendar-day.today {
+    border: 1px solid var(--accent-primary);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.15) inset;
+}
+
+.calendar-day.today time {
+    background: var(--accent-primary);
+    color: var(--bg-base);
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Wygląd pojedynczego zadania na kalendarzu */
+.task-badge {
+    background: color-mix(in srgb, var(--accent-secondary) 25%, transparent);
+    border-left: 3px solid var(--accent-secondary);
+    font-size: 0.8rem;
+    padding: 5px 8px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-badge:hover {
+    transform: translateX(3px);
+    filter: brightness(1.2);
+}
+
+.task-badge.routine {
+    background: color-mix(in srgb, var(--accent-primary) 20%, transparent);
+    border-left-color: var(--accent-primary);
+}
+
+/* ==========================================================================
+   MODAL (Natywny element <dialog>)
+   ========================================================================== */
+
+dialog {
+    margin: auto;
+    width: 100%;
+    max-width: 500px;
+    background: rgba(15, 15, 22, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    color: var(--text-main);
+    padding: 0;
+}
+
+/* Stylowanie tła za modalem (natywne dla <dialog>) */
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+}
+
+#task-form {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+dialog header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 1rem;
+}
+
+/* Formularze z nowoczesnym focusem przy użyciu :has() i focus-within */
+.form-group {
+    border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group legend {
+    color: var(--accent-primary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+input, select, textarea {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 10px;
+    color: var(--text-main);
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ==========================================================================
+   ANIMACJE
+   ========================================================================== */
+
+@keyframes pulse-glow {
+    0% { transform: scale(1); opacity: 0.3; }
+    100% { transform: scale(1.1); opacity: 0.6; }
+}
+
+/* Custom Scrollbar dla pełnego immersyjnego detalu */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
