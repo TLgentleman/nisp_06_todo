@@ -1,13 +1,181 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>
-        ljbdoasbfiasnfdnafnabJBDSAHFBASKJFBKJDFB
-    </h1>
+    <meta name="description" content="Zaawansowana aplikacja TODO i kalendarz z obsługą cykliczności i przypomnień.">
+    <title>MasterTODO - Ultimate Task & Calendar Manager</title>
+    </head>
+<body class="theme-light">
+
+    <header class="top-header" role="banner">
+        <div class="logo-area">
+            <h1>MasterTODO</h1>
+        </div>
+
+        <nav class="view-controls" aria-label="Nawigacja widoku kalendarza">
+            <button aria-pressed="true">Dzień</button>
+            <button aria-pressed="false">Tydzień</button>
+            <button aria-pressed="false">Miesiąc</button>
+            <button aria-pressed="false">Rok</button>
+        </nav>
+
+        <div class="time-navigation">
+            <button aria-label="Poprzedni okres">&lt;</button>
+            <h2 aria-live="polite">Kwiecień 2026</h2>
+            <button aria-label="Następny okres">&gt;</button>
+            <button>Dziś</button>
+        </div>
+
+        <div class="user-settings">
+            <button aria-label="Otwórz ustawienia">Ustawienia ⚙️</button>
+            <button aria-label="Profil użytkownika">Profil 👤</button>
+        </div>
+    </header>
+
+    <div class="app-layout">
+
+        <aside class="sidebar-left" role="navigation" aria-label="Pasek boczny">
+            
+            <section class="quick-actions">
+                <button class="btn-primary" aria-haspopup="dialog" aria-controls="add-task-modal">
+                    + Nowe zadanie
+                </button>
+            </section>
+
+            <nav class="main-tabs" aria-label="Zakładki aplikacji">
+                <ul>
+                    <li><a href="#inbox" aria-current="page">📥 Skrzynka odbiorcza</a></li>
+                    <li><a href="#today">⭐ Dziś</a></li>
+                    <li><a href="#upcoming">📅 Nadchodzące</a></li>
+                    <li><a href="#filters">🏷️ Etykiety i Filtry</a></li>
+                </ul>
+            </nav>
+
+            <section class="pre-placed-routines">
+                <h3>Szybkie rutyny</h3>
+                <ul>
+                    <li>
+                        <button aria-label="Dodaj: Lekarstwa dla psa">
+                            💊 Lekarstwa dla psa
+                        </button>
+                    </li>
+                    <li>
+                        <button aria-label="Dodaj: Trening">
+                            🏋️ Trening
+                        </button>
+                    </li>
+                    <li>
+                        <button aria-label="Dodaj: Podlewanie kwiatów">
+                            🪴 Podlewanie kwiatów
+                        </button>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="activity-log">
+                <h3>Dziennik Aktywności</h3>
+                <ul class="log-list" aria-live="polite">
+                    <li>
+                        <time datetime="2026-04-14T10:00">10:00</time> - Ukończono: Poranny bieg
+                    </li>
+                    <li>
+                        <time datetime="2026-04-14T08:00">08:00</time> - Dodano: Lekarstwa dla psa
+                    </li>
+                </ul>
+            </section>
+
+        </aside>
+
+        <main class="calendar-core" role="main">
+            
+            <div class="calendar-grid month-view">
+                
+                <div class="weekday-header">Poniedziałek</div>
+                <div class="weekday-header">Wtorek</div>
+                <div class="weekday-header">Środa</div>
+                <div class="weekday-header">Czwartek</div>
+                <div class="weekday-header">Piątek</div>
+                <div class="weekday-header">Sobota</div>
+                <div class="weekday-header">Niedziela</div>
+
+                <article class="calendar-day past-day">
+                    <time datetime="2026-03-30">30</time>
+                </article>
+                <article class="calendar-day past-day">
+                    <time datetime="2026-03-31">31</time>
+                </article>
+                <article class="calendar-day current-month">
+                    <time datetime="2026-04-01">1</time>
+                    <div class="task-badge">Opłać rachunki</div>
+                </article>
+                <article class="calendar-day current-month today" aria-current="date">
+                    <time datetime="2026-04-02">2</time>
+                    <div class="task-badge routine">💊 Lekarstwa dla psa (08:00)</div>
+                </article>
+                </div>
+        </main>
+    </div>
+
+    <dialog id="add-task-modal" aria-labelledby="modal-title">
+        <form method="dialog" id="task-form">
+            <header>
+                <h2 id="modal-title">Utwórz nowe zadanie</h2>
+                <button type="button" aria-label="Zamknij okno">✖</button>
+            </header>
+
+            <fieldset class="form-group">
+                <legend class="sr-only">Podstawowe informacje</legend>
+                <label for="task-title">Tytuł zadania</label>
+                <input type="text" id="task-title" name="task-title" placeholder="Np. Lekarstwa dla psa" required>
+                
+                <label for="task-desc">Opis / Notatki</label>
+                <textarea id="task-desc" name="task-desc" rows="3"></textarea>
+            </fieldset>
+
+            <fieldset class="form-group">
+                <legend>Czas i Data</legend>
+                <label for="task-date">Data</label>
+                <input type="date" id="task-date" name="task-date" required>
+                
+                <label for="task-time">Godzina</label>
+                <input type="time" id="task-time" name="task-time" value="08:00">
+            </fieldset>
+
+            <fieldset class="form-group">
+                <legend>Cykliczność (Powtarzaj zadanie)</legend>
+                <label for="recurrence-type">Powtarzaj co:</label>
+                <div class="recurrence-controls">
+                    <input type="number" id="recurrence-interval" name="recurrence-interval" min="1" value="1">
+                    <select id="recurrence-unit" name="recurrence-unit">
+                        <option value="none">Nie powtarzaj</option>
+                        <option value="days">Dni</option>
+                        <option value="weeks" selected>Tygodni</option>
+                        <option value="months">Miesięcy</option>
+                        <option value="years">Lat</option>
+                    </select>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group">
+                <legend>Przypomnienia</legend>
+                <label for="reminder-setting">Powiadom mnie:</label>
+                <select id="reminder-setting" name="reminder-setting">
+                    <option value="0">W momencie wydarzenia</option>
+                    <option value="15">15 minut przed</option>
+                    <option value="30" selected>30 minut przed</option>
+                    <option value="60">1 godzinę przed</option>
+                    <option value="1440">1 dzień przed</option>
+                    <option value="custom">Niestandardowe...</option>
+                </select>
+            </fieldset>
+
+            <footer class="form-actions">
+                <button type="reset" class="btn-secondary">Anuluj</button>
+                <button type="submit" class="btn-primary">Zapisz zadanie</button>
+            </footer>
+        </form>
+    </dialog>
+
 </body>
 </html>
